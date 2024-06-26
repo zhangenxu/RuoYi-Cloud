@@ -51,6 +51,13 @@
             <version>${persistence-api.version}</version>
         </dependency>
 
+        <!-- mybatis-log-->
+        <dependency>
+            <groupId>com.github.WangJi92</groupId>
+            <artifactId>mybatis-sql-log</artifactId>
+            <version>${mybatis-log.version}</version>
+        </dependency>
+
 
     </dependencies>
 </project>

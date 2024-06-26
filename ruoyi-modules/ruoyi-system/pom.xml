@@ -90,6 +90,12 @@
             <artifactId>ruoyi-common-swagger</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.github.WangJi92</groupId>-->
+<!--            <artifactId>mybatis-sql-log</artifactId>-->
+<!--            <version>{mybatis-log.version}</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <build>

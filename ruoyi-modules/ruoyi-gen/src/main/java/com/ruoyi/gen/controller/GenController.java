@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,19 +35,21 @@ import com.ruoyi.gen.service.IGenTableService;
  * 
  * @author ruoyi
  */
+@Api(tags = "岗代码生成操作处理")
 @RequestMapping("/gen")
 @RestController
-public class GenController extends BaseController
-{
-    @Autowired
+public class GenController extends BaseController {
+
+    @Resource
     private IGenTableService genTableService;
 
-    @Autowired
+    @Resource
     private IGenTableColumnService genTableColumnService;
 
     /**
      * 查询代码生成列表
      */
+    @ApiOperation(value = "查询代码生成列表", httpMethod = "GET")
     @RequiresPermissions("tool:gen:list")
     @GetMapping("/list")
     public TableDataInfo genList(GenTable genTable)
@@ -58,10 +62,10 @@ public class GenController extends BaseController
     /**
      * 修改代码生成业务
      */
+    @ApiOperation(value = "修改代码生成业务", httpMethod = "GET")
     @RequiresPermissions("tool:gen:query")
     @GetMapping(value = "/{tableId}")
-    public AjaxResult getInfo(@PathVariable Long tableId)
-    {
+    public AjaxResult getInfo(@PathVariable Long tableId) {
         GenTable table = genTableService.selectGenTableById(tableId);
         List<GenTable> tables = genTableService.selectGenTableAll();
         List<GenTableColumn> list = genTableColumnService.selectGenTableColumnListByTableId(tableId);

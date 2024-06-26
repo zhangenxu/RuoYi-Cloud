@@ -51,10 +51,12 @@ spring:
 #  mapperLocations: classpath:mapper/**/*.xml
 
 mybatis:
+  print: true
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.ruoyi.system
   configuration:
     map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # knife4j公共配置
 springdoc:
