@@ -1,5 +1,6 @@
 package com.ruoyi.gateway.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,40 +18,26 @@ import reactor.core.publisher.Mono;
  *
  * @author ruoyi
  */
-@Order(-1)
+@Order(-1)//定义spring容器Bean执行顺序的优先级，越小越优先
 @Configuration
-public class GatewayExceptionHandler implements ErrorWebExceptionHandler
-{
-    private static final Logger log = LoggerFactory.getLogger(GatewayExceptionHandler.class);
-
+@Slf4j
+public class GatewayExceptionHandler implements ErrorWebExceptionHandler {
     @Override
-    public Mono<Void> handle(ServerWebExchange exchange, Throwable ex)
-    {
+    public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         ServerHttpResponse response = exchange.getResponse();
-
-        if (exchange.getResponse().isCommitted())
-        {
+        if (exchange.getResponse().isCommitted()) {
             return Mono.error(ex);
         }
-
         String msg;
-
-        if (ex instanceof NotFoundException)
-        {
+        if (ex instanceof NotFoundException) {
             msg = "服务未找到";
-        }
-        else if (ex instanceof ResponseStatusException)
-        {
+        } else if (ex instanceof ResponseStatusException) {
             ResponseStatusException responseStatusException = (ResponseStatusException) ex;
             msg = responseStatusException.getMessage();
-        }
-        else
-        {
+        } else {
             msg = "内部服务器错误";
         }
-
         log.error("[网关异常处理]请求路径:{},异常信息:{}", exchange.getRequest().getPath(), ex.getMessage());
-
         return ServletUtils.webFluxResponseWriter(response, msg);
     }
 }

@@ -2,6 +2,7 @@ package com.ruoyi.gateway.filter;
 
 import java.util.Collections;
 import java.util.List;
+import lombok.Data;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
@@ -20,43 +21,35 @@ import reactor.core.publisher.Mono;
 @Component
 public class CacheRequestFilter extends AbstractGatewayFilterFactory<CacheRequestFilter.Config>
 {
-    public CacheRequestFilter()
-    {
+    public CacheRequestFilter(){
         super(Config.class);
     }
 
     @Override
-    public String name()
-    {
+    public String name(){
         return "CacheRequestFilter";
     }
 
     @Override
-    public GatewayFilter apply(Config config)
-    {
+    public GatewayFilter apply(Config config) {
         CacheRequestGatewayFilter cacheRequestGatewayFilter = new CacheRequestGatewayFilter();
         Integer order = config.getOrder();
-        if (order == null)
-        {
+        if (order == null){
             return cacheRequestGatewayFilter;
         }
         return new OrderedGatewayFilter(cacheRequestGatewayFilter, order);
     }
 
-    public static class CacheRequestGatewayFilter implements GatewayFilter
-    {
+    public static class CacheRequestGatewayFilter implements GatewayFilter{
         @Override
-        public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain)
-        {
+        public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain){
             // GET DELETE 不过滤
             HttpMethod method = exchange.getRequest().getMethod();
-            if (method == null || method == HttpMethod.GET || method == HttpMethod.DELETE)
-            {
+            if (method == null || method == HttpMethod.GET || method == HttpMethod.DELETE){
                 return chain.filter(exchange);
             }
             return ServerWebExchangeUtils.cacheRequestBodyAndRequest(exchange, (serverHttpRequest) -> {
-                if (serverHttpRequest == exchange.getRequest())
-                {
+                if (serverHttpRequest == exchange.getRequest()){
                     return chain.filter(exchange);
                 }
                 return chain.filter(exchange.mutate().request(serverHttpRequest).build());
@@ -65,23 +58,12 @@ public class CacheRequestFilter extends AbstractGatewayFilterFactory<CacheReques
     }
 
     @Override
-    public List<String> shortcutFieldOrder()
-    {
+    public List<String> shortcutFieldOrder(){
         return Collections.singletonList("order");
     }
 
-    static class Config
-    {
+    @Data
+    static class Config {
         private Integer order;
-
-        public Integer getOrder()
-        {
-            return order;
-        }
-
-        public void setOrder(Integer order)
-        {
-            this.order = order;
-        }
     }
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.gateway.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,19 +12,18 @@ import com.ruoyi.gateway.handler.ValidateCodeHandler;
 
 /**
  * 路由配置信息
- * 
+ *
  * @author ruoyi
  */
+@Slf4j
 @Configuration
-public class RouterFunctionConfiguration
-{
+public class RouterFunctionConfiguration {
     @Autowired
     private ValidateCodeHandler validateCodeHandler;
 
     @SuppressWarnings("rawtypes")
     @Bean
-    public RouterFunction routerFunction()
-    {
+    public RouterFunction routerFunction() {
         return RouterFunctions.route(
                 RequestPredicates.GET("/code").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)),
                 validateCodeHandler);
